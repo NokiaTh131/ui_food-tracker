@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLAUDE - ผู้ช่วยโภชนาการ</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons">
+                <span class="material-icons">signal_cellular_4_bar</span>
+                <span class="material-icons">wifi</span>
+                <span class="material-icons">battery_full</span>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <h1>🥗 CLAUDE</h1>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Screen -->
+            <div id="dashboard-screen" class="screen active">
+                <div class="welcome-message">
+                    <h2>🌅 สวัสดี คุณแมรี่!</h2>
+                </div>
+
+                <!-- Daily Progress Card -->
+                <div class="card progress-card">
+                    <div class="card-header">
+                        <span class="card-icon">📊</span>
+                        <h3>วันนี้</h3>
+                    </div>
+                    <div class="progress-visual">
+                        <div class="progress-circle">
+                            <div class="progress-stats">
+                                <div class="stat">
+                                    <span class="stat-number">1,020</span>
+                                    <span class="stat-label">แคลอรี่</span>
+                                </div>
+                                <div class="stat-divider">จาก</div>
+                                <div class="stat">
+                                    <span class="stat-number">1,800</span>
+                                    <span class="stat-label">เป้าหมาย</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 57%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Food Recommendations -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">🍽️</span>
+                        <h3>แนะนำสำหรับคุณ</h3>
+                    </div>
+                    <div id="food-recommendations">
+                        <!-- Recommendations will be populated by JavaScript -->
+                    </div>
+                    <button class="btn-icon" onclick="showAllRecommendations()">
+                        <span class="material-icons">expand_more</span>
+                    </button>
+                </div>
+
+                <!-- Recent Meals -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">🕐</span>
+                        <h3>มื้อล่าสุด</h3>
+                    </div>
+                    <div class="meal-item">
+                        <div class="meal-image">🥗</div>
+                        <div class="meal-info">
+                            <h4>สลัดไก่ย่าง</h4>
+                            <p>320 แคลอรี่</p>
+                        </div>
+                    </div>
+                    <div class="meal-item">
+                        <div class="meal-image">🥣</div>
+                        <div class="meal-info">
+                            <h4>โอ๊ตมีลเบอร์รี่</h4>
+                            <p>280 แคลอรี่</p>
+                        </div>
+                    </div>
+                    <div class="meal-item">
+                        <div class="meal-image">🐟</div>
+                        <div class="meal-info">
+                            <h4>แซลมอนผัดผัก</h4>
+                            <p>420 แคลอรี่</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Take Photo Screen -->
+            <div id="photo-screen" class="screen">
+                <div class="photo-header">
+                    <h2>📷 ถ่ายรูปอาหาร</h2>
+                </div>
+                
+                <div class="photo-container">
+                    <div class="camera-placeholder">
+                        <div class="camera-icon">📸</div>
+                        <p>จี้กล้องที่อาหาร</p>
+                    </div>
+                    
+                    <button class="btn-camera" onclick="handleTakePhoto()">
+                        <span class="camera-btn-icon">📷</span>
+                        <span>ถ่ายรูป</span>
+                    </button>
+                </div>
+
+                <!-- Restaurant Suggestions (shown after photo capture) -->
+                <div id="restaurant-suggestions" class="card" style="display: none;">
+                    <div class="card-header">
+                        <span class="card-icon">🏪</span>
+                        <h3>ร้านอาหารใกล้เคียง</h3>
+                    </div>
+                    <div id="restaurant-list">
+                        <!-- Restaurants will be populated by JavaScript -->
+                    </div>
+                    <button class="btn-icon" onclick="findMoreRestaurants()">
+                        <span class="material-icons">expand_more</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- History Screen -->
+            <div id="history-screen" class="screen">
+                <div class="history-header">
+                    <h2>📅 ประวัติอาหาร</h2>
+                </div>
+                
+                <!-- Date Navigation -->
+                <div class="card">
+                    <div class="date-navigation">
+                        <button class="date-nav-btn">
+                            <span class="material-icons">chevron_left</span>
+                        </button>
+                        <div class="current-date">
+                            <span class="date-icon">📅</span>
+                            <span>จันทร์ 8 ก.ค. 2568</span>
+                        </div>
+                        <button class="date-nav-btn">
+                            <span class="material-icons">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Daily Summary -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">📊</span>
+                        <h3>สรุปวันนี้</h3>
+                    </div>
+                    <div class="summary-visual">
+                        <div class="stat-circle">
+                            <div class="stat-icon">🔥</div>
+                            <span class="stat-number">1,020</span>
+                            <span class="stat-label">แคลอรี่</span>
+                        </div>
+                        <div class="stat-circle">
+                            <div class="stat-icon">💪</div>
+                            <span class="stat-number">75g</span>
+                            <span class="stat-label">โปรตีน</span>
+                        </div>
+                        <div class="stat-circle">
+                            <div class="stat-icon">🍽️</div>
+                            <span class="stat-number">3</span>
+                            <span class="stat-label">มื้อ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meals List -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-icon">🍽️</span>
+                        <h3>มื้ออาหารวันนี้</h3>
+                    </div>
+                    <div class="meal-timeline">
+                        <div class="meal-item">
+                            <div class="meal-time">9:15</div>
+                            <div class="meal-image">🥗</div>
+                            <div class="meal-info">
+                                <h4>สลัดไก่ย่าง</h4>
+                                <p>320 แคลอรี่</p>
+                            </div>
+                        </div>
+                        <div class="meal-item">
+                            <div class="meal-time">8:30</div>
+                            <div class="meal-image">🥣</div>
+                            <div class="meal-info">
+                                <h4>โอ๊ตมีลเบอร์รี่</h4>
+                                <p>280 แคลอรี่</p>
+                            </div>
+                        </div>
+                        <div class="meal-item">
+                            <div class="meal-time">7:45</div>
+                            <div class="meal-image">🐟</div>
+                            <div class="meal-info">
+                                <h4>แซลมอนผัดผัก</h4>
+                                <p>420 แคลอรี่</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" onclick="showScreen('dashboard')">
+                <span class="nav-icon">🏠</span>
+                <span>หน้าหลัก</span>
+            </button>
+            <button class="nav-btn" onclick="showScreen('photo')">
+                <span class="nav-icon">📷</span>
+                <span>ถ่ายรูป</span>
+            </button>
+            <button class="nav-btn" onclick="showScreen('history')">
+                <span class="nav-icon">📝</span>
+                <span>ประวัติ</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Modal Title</h3>
+            <p id="modal-text">Modal content goes here.</p>
+            <div class="modal-buttons">
+                <button class="btn secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn primary" onclick="confirmAction()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
