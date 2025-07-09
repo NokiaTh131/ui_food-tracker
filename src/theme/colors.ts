@@ -1,6 +1,6 @@
 export const theme = {
   // Primary green colors
-  primary: '#4CAF50',
+  primary: '#22986a',
   primaryLight: '#81C784',
   primaryDark: '#388E3C',
   

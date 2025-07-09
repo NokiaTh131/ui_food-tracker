@@ -25,7 +25,7 @@ body {
 
 /* Status Bar */
 .status-bar {
-    background: #4CAF50;
+    background: #22986a;
     color: white;
     padding: 8px 20px;
     display: flex;
@@ -45,10 +45,23 @@ body {
 }
 
 /* Header */
+
 .header {
-    background: #4CAF50;
+  display: flex;
+  flex-direction: row; /* เรียงแนวนอน */
+  align-items: center; /* จัดให้แนวกึ่งกลางแนวตั้ง */
+  gap: 10px; /* ช่องว่างระหว่างโลโก้กับข้อความ */
+}
+
+.header img {
+  height: 60px; /* ปรับขนาดโลโก้ */
+  width: auto;
+}
+
+.header {
+    background: #22986a;
     color: white;
-    padding: 15px 20px;
+  
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -116,7 +129,7 @@ body {
 
 /* Progress Card Styles */
 .progress-card {
-    background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+    background: linear-gradient(135deg, #22986a 0%, #66BB6A 100%);
     color: white;
 }
 
@@ -158,13 +171,13 @@ body {
     display: block;
     font-size: 32px;
     font-weight: 700;
-    color: #4CAF50;
+    color: #FFFFFF;
     margin-bottom: 5px;
 }
 
 .stat-label {
     font-size: 18px;
-    color: #555555;
+    color: #000000;
 }
 
 /* Progress Bar */
@@ -178,7 +191,7 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: #4CAF50;
+    background: #ffcc1b;
     border-radius: 10px;
     transition: width 0.3s ease;
 }
