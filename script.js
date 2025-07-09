@@ -158,6 +158,106 @@ function handleTakePhoto() {
     );
 }
 
+// New function to handle photo analysis
+function analyzeFood(imageSrc) {
+    const foodData = [
+        {
+            name: "สลัดไก่ย่าง",
+            confidence: "95%",
+            calories: 320,
+            protein: "28g",
+            carbs: "12g",
+            fat: "18g",
+            fiber: "5g",
+            sodium: "680mg"
+        },
+        {
+            name: "สปาเก็ตตี้โบโลเนส",
+            confidence: "92%",
+            calories: 580,
+            protein: "24g",
+            carbs: "68g",
+            fat: "22g",
+            fiber: "4g",
+            sodium: "890mg"
+        },
+        {
+            name: "ขนมปังอะโวคาโด",
+            confidence: "88%",
+            calories: 280,
+            protein: "8g",
+            carbs: "24g",
+            fat: "18g",
+            fiber: "12g",
+            sodium: "420mg"
+        },
+        {
+            name: "ข้าวผัดกุ้ง",
+            confidence: "90%",
+            calories: 450,
+            protein: "18g",
+            carbs: "52g",
+            fat: "16g",
+            fiber: "3g",
+            sodium: "1200mg"
+        },
+        {
+            name: "ส้มตำ",
+            confidence: "87%",
+            calories: 120,
+            protein: "3g",
+            carbs: "28g",
+            fat: "2g",
+            fiber: "6g",
+            sodium: "950mg"
+        }
+    ];
+
+    const randomFood = foodData[Math.floor(Math.random() * foodData.length)];
+    
+    // Show loading section
+    document.getElementById('loading-section').style.display = 'block';
+    document.getElementById('analysis-results').style.display = 'none';
+    
+    setTimeout(() => {
+        // Hide loading and show results
+        document.getElementById('loading-section').style.display = 'none';
+        document.getElementById('analysis-results').style.display = 'block';
+        
+        // Update results
+        document.getElementById('analyzed-food-image').src = imageSrc;
+        document.getElementById('food-name').textContent = randomFood.name;
+        document.getElementById('confidence').textContent = `ตรวจพบด้วยความแม่นยำ ${randomFood.confidence}`;
+        document.getElementById('calories').textContent = randomFood.calories;
+        document.getElementById('protein').textContent = randomFood.protein;
+        document.getElementById('carbs').textContent = randomFood.carbs;
+        document.getElementById('fat').textContent = randomFood.fat;
+        document.getElementById('fiber').textContent = randomFood.fiber;
+        document.getElementById('sodium').textContent = randomFood.sodium;
+        
+        // Update daily calories
+        dailyCalories += randomFood.calories;
+        updateProgressBar();
+        
+        // Scroll to results
+        document.getElementById('nutrient-analysis').scrollIntoView({ behavior: 'smooth' });
+    }, 2000);
+}
+
+// Function to show restaurant suggestions after nutrient analysis
+function showRestaurantSuggestions() {
+    const restaurantSuggestions = document.getElementById('restaurant-suggestions');
+    restaurantSuggestions.style.display = 'block';
+    
+    // Populate with existing restaurant data
+    displayRestaurantSuggestions();
+    
+    // Scroll to restaurant suggestions
+    setTimeout(() => {
+        restaurantSuggestions.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+}
+
 // Food recommendation functions
 function populateFoodRecommendations() {
     const container = document.getElementById('food-recommendations');
@@ -387,6 +487,24 @@ document.addEventListener('DOMContentLoaded', function() {
             );
         });
     });
+    
+    // Add photo input event listener for nutrient analysis
+    const photoInput = document.getElementById('photo-input');
+    if (photoInput) {
+        photoInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Show nutrient analysis section
+                document.getElementById('nutrient-analysis').style.display = 'block';
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    analyzeFood(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
     
     // Add keyboard navigation support
     document.addEventListener('keydown', function(e) {

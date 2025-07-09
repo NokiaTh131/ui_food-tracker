@@ -114,10 +114,61 @@
                         <p>จี้กล้องที่อาหาร</p>
                     </div>
                     
-                    <button class="btn-camera" onclick="handleTakePhoto()">
+                    <input type="file" id="photo-input" accept="image/*" style="display: none;">
+                    <button class="btn-camera" onclick="document.getElementById('photo-input').click()">
                         <span class="camera-btn-icon">📷</span>
                         <span>ถ่ายรูป</span>
                     </button>
+                </div>
+
+                <!-- Nutrient Analysis Results -->
+                <div id="nutrient-analysis" class="card" style="display: none;">
+                    <div class="card-header">
+                        <span class="card-icon">📊</span>
+                        <h3>ผลการวิเคราะห์โภชนาการ</h3>
+                    </div>
+                    
+                    <div id="loading-section" class="loading-section">
+                        <div class="loading-spinner"></div>
+                        <p>กำลังวิเคราะห์อาหาร...</p>
+                    </div>
+
+                    <div id="analysis-results" style="display: none;">
+                        <img id="analyzed-food-image" class="food-image" alt="Food">
+                        <h4 id="food-name" class="food-name">สลัดไก่ย่าง</h4>
+                        <p id="confidence" class="confidence">ตรวจพบด้วยความแม่นยำ 95%</p>
+                        
+                        <div class="nutrient-grid">
+                            <div class="nutrient-card">
+                                <div class="nutrient-value" id="calories">320</div>
+                                <div class="nutrient-label">แคลอรี่</div>
+                            </div>
+                            <div class="nutrient-card">
+                                <div class="nutrient-value" id="protein">28g</div>
+                                <div class="nutrient-label">โปรตีน</div>
+                            </div>
+                            <div class="nutrient-card">
+                                <div class="nutrient-value" id="carbs">12g</div>
+                                <div class="nutrient-label">คาร์โบไฮเดรต</div>
+                            </div>
+                            <div class="nutrient-card">
+                                <div class="nutrient-value" id="fat">18g</div>
+                                <div class="nutrient-label">ไขมัน</div>
+                            </div>
+                            <div class="nutrient-card">
+                                <div class="nutrient-value" id="fiber">5g</div>
+                                <div class="nutrient-label">ใยอาหาร</div>
+                            </div>
+                            <div class="nutrient-card">
+                                <div class="nutrient-value" id="sodium">680mg</div>
+                                <div class="nutrient-label">โซเดียม</div>
+                            </div>
+                        </div>
+
+                        <button class="btn primary" onclick="showRestaurantSuggestions()">
+                            🏪 หาร้านอาหารที่เติมเต็มโภชนาการ
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Restaurant Suggestions (shown after photo capture) -->
@@ -126,6 +177,27 @@
                         <span class="card-icon">🏪</span>
                         <h3>ร้านอาหารใกล้เคียง</h3>
                     </div>
+                    
+                    <div class="needed-nutrients">
+                        <h4>คุณยังต้องการ:</h4>
+                        <div class="nutrient-need">
+                            <span>แคลอรี่:</span>
+                            <span>อีก 1,180 แคลอรี่</span>
+                        </div>
+                        <div class="nutrient-need">
+                            <span>คาร์โบไฮเดรต:</span>
+                            <span>อีก 138g</span>
+                        </div>
+                        <div class="nutrient-need">
+                            <span>วิตามิน C:</span>
+                            <span>อีก 45mg</span>
+                        </div>
+                        <div class="nutrient-need">
+                            <span>แคลเซียม:</span>
+                            <span>อีก 600mg</span>
+                        </div>
+                    </div>
+                    
                     <div id="restaurant-list">
                         <!-- Restaurants will be populated by JavaScript -->
                     </div>
