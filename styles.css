@@ -215,19 +215,19 @@ body {
 }
 
 .btn.primary {
-    background: #4CAF50;
+    background: #22986a;
     color: white;
-    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 2px 4px rgba(34, 152, 106, 0.3);
 }
 
 .btn.primary:hover {
-    background: #45a049;
+    background: #1e8660;
     transform: translateY(-1px);
 }
 
 .btn.secondary {
     background: #FFFFFF;
-    color: #4CAF50;
+    color: #22986a;
     border: 2px solid #C8E6C9;
 }
 
@@ -309,7 +309,7 @@ body {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    background: #4CAF50;
+    background: #22986a;
     color: white;
     padding: 8px 12px;
     border-radius: 12px;
@@ -341,7 +341,7 @@ body {
     width: 280px;
     height: 280px;
     background: linear-gradient(135deg, #E8F5E8 0%, #F0F8F0 100%);
-    border: 3px dashed #4CAF50;
+    border: 3px dashed #22986a;
     border-radius: 30px;
     display: flex;
     flex-direction: column;
@@ -354,7 +354,7 @@ body {
 
 .camera-placeholder:hover {
     background: linear-gradient(135deg, #d4e6d4 0%, #e0f0e0 100%);
-    border-color: #45a049;
+    border-color: #1e8660;
     transform: scale(1.02);
 }
 
@@ -384,20 +384,20 @@ body {
     gap: 12px;
     width: 200px;
     height: 70px;
-    background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+    background: linear-gradient(135deg, #22986a 0%, #2ba572 100%);
     color: white;
     border: none;
     border-radius: 35px;
     font-size: 22px;
     font-weight: 600;
-    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 8px 25px rgba(34, 152, 106, 0.3);
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .btn-camera:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
+    box-shadow: 0 12px 35px rgba(34, 152, 106, 0.4);
 }
 
 .camera-btn-icon {
@@ -486,7 +486,7 @@ body {
 .restaurant-item:hover {
     border-color: #22986a;
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+    box-shadow: 0 2px 8px rgba(34, 152, 106, 0.2);
 }
 
 .restaurant-info h4 {
@@ -556,7 +556,7 @@ body {
 .date-nav-btn {
     background: #E8F5E8;
     border: none;
-    color: #4CAF50;
+    color: #22986a;
     cursor: pointer;
     padding: 12px;
     border-radius: 50%;
@@ -569,7 +569,7 @@ body {
 }
 
 .date-nav-btn:hover {
-    background: #4CAF50;
+    background: #22986a;
     color: white;
     transform: scale(1.1);
 }
@@ -625,7 +625,7 @@ body {
 .stat-circle .stat-number {
     font-size: 24px;
     font-weight: 700;
-    color: #4CAF50;
+    color: #22986a;
     margin-bottom: 5px;
 }
 
@@ -673,14 +673,14 @@ body {
 }
 
 .nav-btn.active {
-    color: #4CAF50;
+    color: #22986a;
     background: #E8F5E8;
     transform: translateY(-2px);
 }
 
 .nav-btn:hover {
     transform: translateY(-1px);
-    color: #4CAF50;
+    color: #22986a;
 }
 
 .nav-icon {
@@ -805,12 +805,12 @@ body {
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-    background: #4CAF50;
+    background: #22986a;
     border-radius: 10px;
 }
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
-    background: #45a049;
+    background: #1e8660;
 }
 
 /* Nutrient Analysis Styles */
@@ -822,7 +822,7 @@ body {
 
 .loading-spinner {
     border: 3px solid #f3f3f3;
-    border-top: 3px solid #4CAF50;
+    border-top: 3px solid #22986a;
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -851,7 +851,7 @@ body {
 }
 
 .confidence {
-    color: #4CAF50;
+    color: #22986a;
     font-size: 14px;
     margin-bottom: 20px;
 }
@@ -874,7 +874,7 @@ body {
 .nutrient-value {
     font-size: 24px;
     font-weight: 700;
-    color: #4CAF50;
+    color: #22986a;
     margin-bottom: 5px;
 }
 
@@ -967,7 +967,7 @@ body {
 
 .restaurant-options {
     font-size: 13px;
-    color: #4CAF50;
+    color: #22986a;
     font-weight: 500;
 }
 
