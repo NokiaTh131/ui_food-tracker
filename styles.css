@@ -812,3 +812,171 @@ body {
 .chat-messages::-webkit-scrollbar-thumb:hover {
     background: #45a049;
 }
+
+/* Nutrient Analysis Styles */
+.loading-section {
+    text-align: center;
+    padding: 30px 20px;
+    color: #666;
+}
+
+.loading-spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #4CAF50;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.food-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin: 15px 0;
+}
+
+.food-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2E2E2E;
+    margin: 10px 0 5px;
+}
+
+.confidence {
+    color: #4CAF50;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.nutrient-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.nutrient-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #e9ecef;
+}
+
+.nutrient-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #4CAF50;
+    margin-bottom: 5px;
+}
+
+.nutrient-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+
+/* Restaurant Suggestions Styles */
+.needed-nutrients {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.needed-nutrients h4 {
+    color: #856404;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.nutrient-need {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.nutrient-need span:first-child {
+    color: #856404;
+    font-weight: 500;
+}
+
+.nutrient-need span:last-child {
+    color: #856404;
+    font-weight: 600;
+}
+
+.restaurant-item {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.restaurant-item:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.restaurant-item .meal-image {
+    font-size: 32px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.restaurant-info {
+    flex: 1;
+}
+
+.restaurant-info h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2E2E2E;
+    margin-bottom: 5px;
+}
+
+.restaurant-rating {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.restaurant-options {
+    font-size: 13px;
+    color: #4CAF50;
+    font-weight: 500;
+}
+
+.restaurant-contact {
+    text-align: right;
+    font-size: 11px;
+    color: #666;
+}
+
+.restaurant-contact p {
+    margin: 2px 0;
+}
