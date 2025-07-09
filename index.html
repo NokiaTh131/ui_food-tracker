@@ -1,30 +1,40 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KIN DEE</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
+
 <body>
     <div id="app">
         <!-- Status Bar -->
-        <div class="status-bar">
+        <!-- <div class="status-bar">
             <span class="time">9:41</span>
             <div class="status-icons">
                 <span class="material-icons">signal_cellular_4_bar</span>
                 <span class="material-icons">wifi</span>
                 <span class="material-icons">battery_full</span>
             </div>
-        </div>
+        </div> -->
 
         <!-- Header -->
-        <header class="header" flex>
-            <img src="/src/asset/อิ่มสุข หรือ กินดี ดีวะ.png"/>
-            <h1>KIN DEE</h1>
+        <header class="header">
+            <div class="left-section">
+                <img src="/src/asset/อิ่มสุข หรือ กินดี ดีวะ.png" />
+                <h1>KIN DEE</h1>
+            </div>
+
+            <div class="user-icon">
+                <i class="fas fa-user"></i>
+            </div>
         </header>
 
         <!-- Main Content -->
@@ -40,7 +50,7 @@
                     <div class="card-header">
                         <h3>วันนี้</h3>
                     </div>
-                    <div class="progress-visual">
+                    <!-- <div class="progress-visual">
                         <div class="progress-circle">
                             <div class="progress-stats">
                                 <div class="stat">
@@ -57,7 +67,25 @@
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 57%"></div>
                         </div>
+                    </div> -->
+                    <div class="progress-ring">
+                        <svg class="ring" width="140" height="140">
+                            <circle class="ring-bg" r="60" cx="70" cy="70" />
+                            <circle class="ring-progress" r="60" cx="70" cy="70" />
+
+                            <text x="70" y="65" text-anchor="middle" class="ring-label-text">คงเหลือ</text>
+                            <text x="70" y="85" text-anchor="middle" class="ring-label-number">1,410</text>
+
+                        </svg>
+
+                        <div class="ring-info">
+                            <div>เป้าหมาย: <br /><strong>1,715</strong></div>
+                            <div>อาหาร: <br /><strong>305</strong></div>
+                        </div>
                     </div>
+
+
+
                 </div>
 
                 <!-- Food Recommendations -->
@@ -105,15 +133,15 @@
             <!-- Take Photo Screen -->
             <div id="photo-screen" class="screen">
                 <div class="photo-header">
-                    <h2>📷 ถ่ายรูปอาหาร</h2>
+                    <h2>ถ่ายรูปอาหาร</h2>
                 </div>
-                
+
                 <div class="photo-container">
                     <div class="camera-placeholder">
                         <div class="camera-icon">📸</div>
-                        <p>จี้กล้องที่อาหาร</p>
+                        <p>คลิกเพื่อเพิ่มรูป</p>
                     </div>
-                    
+
                     <button class="btn-camera" onclick="handleTakePhoto()">
                         <span class="camera-btn-icon">📷</span>
                         <span>ถ่ายรูป</span>
@@ -121,7 +149,7 @@
                 </div>
 
                 <!-- Restaurant Suggestions (shown after photo capture) -->
-                <div id="restaurant-suggestions" class="card" style="display: none;">
+                <div id="restaurant-suggestions" class="card" style="display: none">
                     <div class="card-header">
                         <span class="card-icon">🏪</span>
                         <h3>ร้านอาหารใกล้เคียง</h3>
@@ -138,9 +166,9 @@
             <!-- History Screen -->
             <div id="history-screen" class="screen">
                 <div class="history-header">
-                    <h2>📅 ประวัติอาหาร</h2>
+                    <h2>ประวัติอาหาร</h2>
                 </div>
-                
+
                 <!-- Date Navigation -->
                 <div class="card">
                     <div class="date-navigation">
@@ -218,15 +246,15 @@
         <!-- Bottom Navigation -->
         <nav class="bottom-nav">
             <button class="nav-btn active" onclick="showScreen('dashboard')">
-                <span class="nav-icon">🏠</span>
+                <span class="nav-icon"><i class="fas fa-home"></i></span>
                 <span>หน้าหลัก</span>
             </button>
             <button class="nav-btn" onclick="showScreen('photo')">
-                <span class="nav-icon">📷</span>
+                <span class="nav-icon"><i class="fas fa-camera"></i></span>
                 <span>ถ่ายรูป</span>
             </button>
             <button class="nav-btn" onclick="showScreen('history')">
-                <span class="nav-icon">📝</span>
+                <span class="nav-icon"><i class="fas fa-clock-rotate-left"></i></span>
                 <span>ประวัติ</span>
             </button>
         </nav>
@@ -246,4 +274,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

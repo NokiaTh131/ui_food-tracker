@@ -177,8 +177,8 @@ function populateFoodRecommendations() {
         const foodItem = document.createElement('div');
         foodItem.className = 'recommendation-item';
         foodItem.innerHTML = `
-            <div class="meal-image">${food.emoji}</div>
-            <div class="recommendation-info">
+            <div class="meal-image" style="margin-right: 5px;">${food.emoji}</div>
+            <div class="recommendation-info" style="margin-right: 5px;">
                 <h4>${food.name}</h4>
                 <p class="reason">${food.reason}</p>
             </div>
@@ -189,7 +189,7 @@ function populateFoodRecommendations() {
         foodItem.addEventListener('click', () => {
             showModal(
                 'รายละเอียดอาหาร',
-                `${food.emoji} ${food.name}\n\n📊 แคลอรี่: ${food.calories}\n💪 สารอาหาร: ${food.nutrients}\n🕐 เวลาที่เหมาะ: ${food.time}\n\n💡 เหตุผล: ${food.reason}`,
+                `${food.emoji} ${food.name}\n\n แคลอรี่: ${food.calories}\n สารอาหาร: ${food.nutrients}\n เวลาที่เหมาะ: ${food.time}\n\n เหตุผล: ${food.reason}`,
                 null
             );
         });
