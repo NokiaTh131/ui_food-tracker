@@ -230,45 +230,96 @@ function triggerPhotoUpload() {
 }
 
 function handlePhotoUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+    try {
+        const file = event.target.files[0];
+        if (!file) return;
 
-    // Create a URL for the uploaded image
-    const imageUrl = URL.createObjectURL(file);
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            showModal(
+                'ข้อผิดพลาด',
+                'กรุณาเลือกไฟล์รูปภาพเท่านั้น',
+                null
+            );
+            return;
+        }
 
-    // Show loading state
-    showModal(
-        '📷 กำลังวิเคราะห์...',
-        '🔍 กำลังวิเคราะห์อาหารของคุณ...\n\nโปรดรอสักครู่',
-        null
-    );
+        // Create a URL for the uploaded image
+        const imageUrl = URL.createObjectURL(file);
 
-    // Simulate AI processing time
-    setTimeout(() => {
-        closeModal();
-        
-        // Mock food recognition - randomly select a Thai food
-        const recognizedFood = thaiFoodDatabase[Math.floor(Math.random() * thaiFoodDatabase.length)];
-        
-        // Display analysis results with the uploaded image
-        displayNutrientAnalysis(recognizedFood, imageUrl);
-        
-        // Update daily intake
-        updateDailyIntake(recognizedFood);
-        
-        // Show restaurant suggestions after analysis
+        // Show loading state
+        showModal(
+            '📷 กำลังวิเคราะห์...',
+            '🔍 กำลังวิเคราะห์อาหารของคุณ...\n\nโปรดรอสักครู่',
+            null
+        );
+
+        // Simulate AI processing time
         setTimeout(() => {
-            displayRestaurantSuggestionsBasedOnDeficiency();
-        }, 1500);
+            try {
+                closeModal();
+                
+                // Mock food recognition - randomly select a Thai food
+                if (!thaiFoodDatabase || thaiFoodDatabase.length === 0) {
+                    throw new Error('Thai food database not available');
+                }
+                const recognizedFood = thaiFoodDatabase[Math.floor(Math.random() * thaiFoodDatabase.length)];
+                
+                // Display analysis results with the uploaded image
+                displayNutrientAnalysis(recognizedFood, imageUrl);
+                
+                // Update daily intake
+                updateDailyIntake(recognizedFood);
+                
+                // Show restaurant suggestions after analysis
+                setTimeout(() => {
+                    displayRestaurantSuggestionsBasedOnDeficiency();
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Error during food analysis:', error);
+                showModal(
+                    'ข้อผิดพลาด',
+                    'เกิดข้อผิดพลาดในการวิเคราะห์อาหาร กรุณาลองใหม่อีกครั้ง',
+                    null
+                );
+            }
+        }, 2000);
         
-    }, 2000);
+    } catch (error) {
+        console.error('Error handling photo upload:', error);
+        showModal(
+            'ข้อผิดพลาด',
+            'เกิดข้อผิดพลาดในการอัปโหลดรูป กรุณาลองใหม่อีกครั้ง',
+            null
+        );
+    }
 }
 
 function displayNutrientAnalysis(food, imageUrl = null) {
-    const analysisContainer = document.getElementById('nutrient-analysis');
-    const resultContainer = document.getElementById('food-analysis-result');
-    
-    if (!analysisContainer || !resultContainer) return;
+    try {
+        const analysisContainer = document.getElementById('nutrient-analysis');
+        const resultContainer = document.getElementById('food-analysis-result');
+        
+        if (!analysisContainer || !resultContainer) {
+            console.error('Required elements not found');
+            showModal(
+                'ข้อผิดพลาด',
+                'ไม่พบองค์ประกอบที่จำเป็น กรุณาโหลดหน้าใหม่',
+                null
+            );
+            return;
+        }
+        
+        if (!food) {
+            console.error('No food data provided');
+            showModal(
+                'ข้อผิดพลาด',
+                'ไม่พบข้อมูลอาหาร กรุณาลองใหม่อีกครั้ง',
+                null
+            );
+            return;
+        }
     
     // Calculate nutrition deficiencies
     const deficiencies = calculateNutrientDeficiencies(food);
@@ -340,11 +391,19 @@ function displayNutrientAnalysis(food, imageUrl = null) {
         </div>
     `;
     
-    // Show the analysis section
-    analysisContainer.style.display = 'block';
-    
-    // Scroll to show the analysis
-    analysisContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Show the analysis section
+        analysisContainer.style.display = 'block';
+        
+        // Scroll to show the analysis
+        analysisContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (error) {
+        console.error('Error displaying nutrient analysis:', error);
+        showModal(
+            'ข้อผิดพลาด',
+            'เกิดข้อผิดพลาดในการแสดงผลการวิเคราะห์ กรุณาลองใหม่อีกครั้ง',
+            null
+        );
+    }
 }
 
 function updateDailyIntake(food) {
@@ -400,105 +459,6 @@ function handleTakePhoto() {
     triggerPhotoUpload();
 }
 
-// New function to handle photo analysis
-function analyzeFood(imageSrc) {
-    const foodData = [
-        {
-            name: "สลัดไก่ย่าง",
-            confidence: "95%",
-            calories: 320,
-            protein: "28g",
-            carbs: "12g",
-            fat: "18g",
-            fiber: "5g",
-            sodium: "680mg"
-        },
-        {
-            name: "สปาเก็ตตี้โบโลเนส",
-            confidence: "92%",
-            calories: 580,
-            protein: "24g",
-            carbs: "68g",
-            fat: "22g",
-            fiber: "4g",
-            sodium: "890mg"
-        },
-        {
-            name: "ขนมปังอะโวคาโด",
-            confidence: "88%",
-            calories: 280,
-            protein: "8g",
-            carbs: "24g",
-            fat: "18g",
-            fiber: "12g",
-            sodium: "420mg"
-        },
-        {
-            name: "ข้าวผัดกุ้ง",
-            confidence: "90%",
-            calories: 450,
-            protein: "18g",
-            carbs: "52g",
-            fat: "16g",
-            fiber: "3g",
-            sodium: "1200mg"
-        },
-        {
-            name: "ส้มตำ",
-            confidence: "87%",
-            calories: 120,
-            protein: "3g",
-            carbs: "28g",
-            fat: "2g",
-            fiber: "6g",
-            sodium: "950mg"
-        }
-    ];
-
-    const randomFood = foodData[Math.floor(Math.random() * foodData.length)];
-    
-    // Show loading section
-    document.getElementById('loading-section').style.display = 'block';
-    document.getElementById('analysis-results').style.display = 'none';
-    
-    setTimeout(() => {
-        // Hide loading and show results
-        document.getElementById('loading-section').style.display = 'none';
-        document.getElementById('analysis-results').style.display = 'block';
-        
-        // Update results
-        document.getElementById('analyzed-food-image').src = imageSrc;
-        document.getElementById('food-name').textContent = randomFood.name;
-        document.getElementById('confidence').textContent = `ตรวจพบด้วยความแม่นยำ ${randomFood.confidence}`;
-        document.getElementById('calories').textContent = randomFood.calories;
-        document.getElementById('protein').textContent = randomFood.protein;
-        document.getElementById('carbs').textContent = randomFood.carbs;
-        document.getElementById('fat').textContent = randomFood.fat;
-        document.getElementById('fiber').textContent = randomFood.fiber;
-        document.getElementById('sodium').textContent = randomFood.sodium;
-        
-        // Update daily calories
-        dailyCalories += randomFood.calories;
-        updateProgressBar();
-        
-        // Scroll to results
-        document.getElementById('nutrient-analysis').scrollIntoView({ behavior: 'smooth' });
-    }, 2000);
-}
-
-// Function to show restaurant suggestions after nutrient analysis
-function showRestaurantSuggestions() {
-    const restaurantSuggestions = document.getElementById('restaurant-suggestions');
-    restaurantSuggestions.style.display = 'block';
-    
-    // Populate with existing restaurant data
-    displayRestaurantSuggestions();
-    
-    // Scroll to restaurant suggestions
-    setTimeout(() => {
-        restaurantSuggestions.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-}
 
 // Food recommendation functions
 function populateFoodRecommendations() {
@@ -1017,19 +977,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add photo input event listener for nutrient analysis
     const photoInput = document.getElementById('photo-input');
     if (photoInput) {
-        photoInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                // Show nutrient analysis section
-                document.getElementById('nutrient-analysis').style.display = 'block';
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    analyzeFood(e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+        photoInput.addEventListener('change', handlePhotoUpload);
     }
     
     // Add keyboard navigation support
