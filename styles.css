@@ -96,6 +96,7 @@ body {
 /* Main Content */
 .main-content {
     padding: 20px;
+    padding-bottom: 100px;
     min-height: calc(100vh - 160px);
     background: #FAFAFA;
 }
