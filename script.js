@@ -52,6 +52,90 @@ const nearbyRestaurants = [
     }
 ];
 
+// Mock Thai food database for recognition
+const thaiFoodDatabase = [
+    {
+        id: 1,
+        name: "ข้าวผัดกุ้ง",
+        emoji: "🍤",
+        calories: 520,
+        protein: 25,
+        carbs: 75,
+        fat: 12,
+        fiber: 3,
+        sodium: 1200,
+        confidence: 0.92
+    },
+    {
+        id: 2,
+        name: "ส้มตำไทย",
+        emoji: "🥗",
+        calories: 120,
+        protein: 8,
+        carbs: 25,
+        fat: 2,
+        fiber: 6,
+        sodium: 800,
+        confidence: 0.88
+    },
+    {
+        id: 3,
+        name: "แกงเขียวหวานไก่",
+        emoji: "🍛",
+        calories: 350,
+        protein: 30,
+        carbs: 15,
+        fat: 20,
+        fiber: 4,
+        sodium: 950,
+        confidence: 0.85
+    },
+    {
+        id: 4,
+        name: "ผัดไทยกุ้งสด",
+        emoji: "🍜",
+        calories: 450,
+        protein: 22,
+        carbs: 65,
+        fat: 15,
+        fiber: 5,
+        sodium: 1100,
+        confidence: 0.90
+    },
+    {
+        id: 5,
+        name: "มะม่วงข้าวเหนียว",
+        emoji: "🥭",
+        calories: 280,
+        protein: 4,
+        carbs: 55,
+        fat: 8,
+        fiber: 3,
+        sodium: 50,
+        confidence: 0.87
+    }
+];
+
+// User's daily nutrition targets
+const dailyTargets = {
+    calories: 1800,
+    protein: 90,      // grams
+    carbs: 225,       // grams
+    fat: 60,          // grams
+    fiber: 25,        // grams
+    sodium: 2300      // mg
+};
+
+// Current daily intake (mock data)
+let currentIntake = {
+    calories: 1020,
+    protein: 45,
+    carbs: 120,
+    fat: 35,
+    fiber: 12,
+    sodium: 1500
+};
+
 // Mock food recommendations in Thai
 const foodRecommendations = [
     {
@@ -139,23 +223,181 @@ function showScreen(screenName) {
     currentScreen = screenName;
 }
 
-// Photo screen actions
-function handleTakePhoto() {
+// Photo upload functions
+function triggerPhotoUpload() {
+    const photoInput = document.getElementById('photo-input');
+    photoInput.click();
+}
+
+function handlePhotoUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Create a URL for the uploaded image
+    const imageUrl = URL.createObjectURL(file);
+
+    // Show loading state
     showModal(
-        '📷 บันทึกอาหาร',
-        '✅ ถ่ายรูปสำเร็จ! กำลังวิเคราะห์คุณค่าทางโภชนาการ...',
-        () => {
-            // Mock adding a meal
-            dailyCalories += 320;
-            updateProgressBar();
-            showSuccessMessage('🎉 บันทึกอาหารสำเร็จ!\n\n🥗 สลัดไก่ย่าง\n📊 320 แคลอรี่ • 35g โปรตีน');
-            
-            // Show restaurant suggestions after photo capture
-            setTimeout(() => {
-                displayRestaurantSuggestions();
-            }, 1000);
-        }
+        '📷 กำลังวิเคราะห์...',
+        '🔍 กำลังวิเคราะห์อาหารของคุณ...\n\nโปรดรอสักครู่',
+        null
     );
+
+    // Simulate AI processing time
+    setTimeout(() => {
+        closeModal();
+        
+        // Mock food recognition - randomly select a Thai food
+        const recognizedFood = thaiFoodDatabase[Math.floor(Math.random() * thaiFoodDatabase.length)];
+        
+        // Display analysis results with the uploaded image
+        displayNutrientAnalysis(recognizedFood, imageUrl);
+        
+        // Update daily intake
+        updateDailyIntake(recognizedFood);
+        
+        // Show restaurant suggestions after analysis
+        setTimeout(() => {
+            displayRestaurantSuggestionsBasedOnDeficiency();
+        }, 1500);
+        
+    }, 2000);
+}
+
+function displayNutrientAnalysis(food, imageUrl = null) {
+    const analysisContainer = document.getElementById('nutrient-analysis');
+    const resultContainer = document.getElementById('food-analysis-result');
+    
+    if (!analysisContainer || !resultContainer) return;
+    
+    // Calculate nutrition deficiencies
+    const deficiencies = calculateNutrientDeficiencies(food);
+    
+    resultContainer.innerHTML = `
+        <div class="nutrient-analysis-result">
+            <!-- Detected Food -->
+            <div class="food-detected">
+                ${imageUrl ? `<img src="${imageUrl}" alt="อาหารที่อัปโหลด" class="uploaded-image">` : `<span class="food-detected-emoji">${food.emoji}</span>`}
+                <div class="food-detected-name">${food.name}</div>
+                <div class="food-detected-confidence">ความแม่นยำ: ${Math.round(food.confidence * 100)}%</div>
+            </div>
+            
+            <!-- Nutrient Grid -->
+            <div class="nutrient-grid">
+                <div class="nutrient-item">
+                    <span class="nutrient-icon">🔥</span>
+                    <div class="nutrient-value">${food.calories}</div>
+                    <div class="nutrient-label">แคลอรี่</div>
+                </div>
+                <div class="nutrient-item">
+                    <span class="nutrient-icon">💪</span>
+                    <div class="nutrient-value">${food.protein}g</div>
+                    <div class="nutrient-label">โปรตีน</div>
+                </div>
+                <div class="nutrient-item">
+                    <span class="nutrient-icon">🌾</span>
+                    <div class="nutrient-value">${food.carbs}g</div>
+                    <div class="nutrient-label">คาร์โบไฮเดรต</div>
+                </div>
+                <div class="nutrient-item">
+                    <span class="nutrient-icon">🥑</span>
+                    <div class="nutrient-value">${food.fat}g</div>
+                    <div class="nutrient-label">ไขมัน</div>
+                </div>
+                <div class="nutrient-item">
+                    <span class="nutrient-icon">🌿</span>
+                    <div class="nutrient-value">${food.fiber}g</div>
+                    <div class="nutrient-label">ใยอาหาร</div>
+                </div>
+                <div class="nutrient-item">
+                    <span class="nutrient-icon">🧂</span>
+                    <div class="nutrient-value">${food.sodium}mg</div>
+                    <div class="nutrient-label">โซเดียม</div>
+                </div>
+            </div>
+            
+            ${deficiencies.length > 0 ? `
+            <!-- Deficiency Analysis -->
+            <div class="deficiency-analysis">
+                <div class="deficiency-title">
+                    <span>⚠️</span>
+                    <span>สารอาหารที่ยังขาด</span>
+                </div>
+                <ul class="deficiency-list">
+                    ${deficiencies.map(def => `
+                        <li class="deficiency-item">${def}</li>
+                    `).join('')}
+                </ul>
+            </div>
+            ` : `
+            <div class="deficiency-analysis" style="background: #d4edda; border-color: #c3e6cb;">
+                <div class="deficiency-title" style="color: #155724;">
+                    <span>✅</span>
+                    <span>คุณได้รับสารอาหารครบถ้วนแล้ววันนี้!</span>
+                </div>
+            </div>
+            `}
+        </div>
+    `;
+    
+    // Show the analysis section
+    analysisContainer.style.display = 'block';
+    
+    // Scroll to show the analysis
+    analysisContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateDailyIntake(food) {
+    // Update current intake with the analyzed food
+    currentIntake.calories += food.calories;
+    currentIntake.protein += food.protein;
+    currentIntake.carbs += food.carbs;
+    currentIntake.fat += food.fat;
+    currentIntake.fiber += food.fiber;
+    currentIntake.sodium += food.sodium;
+    
+    // Update the progress bar and daily calories display
+    dailyCalories = currentIntake.calories;
+    updateProgressBar();
+}
+
+function calculateNutrientDeficiencies(addedFood) {
+    const deficiencies = [];
+    const futureIntake = {
+        calories: currentIntake.calories + addedFood.calories,
+        protein: currentIntake.protein + addedFood.protein,
+        carbs: currentIntake.carbs + addedFood.carbs,
+        fat: currentIntake.fat + addedFood.fat,
+        fiber: currentIntake.fiber + addedFood.fiber,
+        sodium: currentIntake.sodium + addedFood.sodium
+    };
+    
+    if (futureIntake.protein < dailyTargets.protein * 0.8) {
+        const needed = Math.round(dailyTargets.protein - futureIntake.protein);
+        deficiencies.push(`โปรตีน - ต้องการอีก ${needed}g`);
+    }
+    
+    if (futureIntake.fiber < dailyTargets.fiber * 0.6) {
+        const needed = Math.round(dailyTargets.fiber - futureIntake.fiber);
+        deficiencies.push(`ใยอาหาร - ต้องการอีก ${needed}g`);
+    }
+    
+    if (futureIntake.calories < dailyTargets.calories * 0.7) {
+        const needed = Math.round(dailyTargets.calories - futureIntake.calories);
+        deficiencies.push(`แคลอรี่ - ต้องการอีก ${needed} แคลอรี่`);
+    }
+    
+    if (futureIntake.carbs < dailyTargets.carbs * 0.5) {
+        const needed = Math.round(dailyTargets.carbs - futureIntake.carbs);
+        deficiencies.push(`คาร์โบไฮเดรต - ต้องการอีก ${needed}g`);
+    }
+    
+    return deficiencies;
+}
+
+// Legacy function - kept for compatibility
+function handleTakePhoto() {
+    triggerPhotoUpload();
 }
 
 // Food recommendation functions
@@ -187,10 +429,17 @@ function populateFoodRecommendations() {
             </div>
         `;
         foodItem.addEventListener('click', () => {
-            showModal(
-                'รายละเอียดอาหาร',
-                `${food.emoji} ${food.name}\n\n แคลอรี่: ${food.calories}\n สารอาหาร: ${food.nutrients}\n เวลาที่เหมาะ: ${food.time}\n\n เหตุผล: ${food.reason}`,
-                null
+            showElderFriendlyModal(
+                '🍽️ รายละเอียดอาหาร',
+                {
+                    emoji: food.emoji,
+                    name: food.name,
+                    calories: food.calories,
+                    nutrients: food.nutrients,
+                    time: food.time,
+                    reason: food.reason
+                },
+                'food-detail'
             );
         });
         container.appendChild(foodItem);
@@ -198,31 +447,46 @@ function populateFoodRecommendations() {
 }
 
 function showAllRecommendations() {
-    showModal(
+    showElderFriendlyModal(
         '🍽️ คำแนะนำอาหารทั้งหมด',
-        'คำแนะนำอาหารสำหรับคุณวันนี้:\n\n' + 
-        foodRecommendations.map(food => `${food.emoji} ${food.name} (${food.calories} แคลอรี่)\n💡 ${food.reason}`).join('\n\n'),
-        null
+        foodRecommendations,
+        'all-recommendations'
     );
 }
 
 // Restaurant suggestion functions
-function displayRestaurantSuggestions() {
+function displayRestaurantSuggestionsBasedOnDeficiency() {
     const container = document.getElementById('restaurant-suggestions');
     const listContainer = document.getElementById('restaurant-list');
     
     if (!container || !listContainer) return;
     
+    // Calculate current deficiencies to recommend appropriate restaurants
+    const deficiencies = calculateCurrentDeficiencies();
+    
+    // Update header to show why these restaurants are suggested
+    const headerElement = container.querySelector('.card-header h3');
+    if (headerElement) {
+        if (deficiencies.length > 0) {
+            headerElement.textContent = 'ร้านอาหารที่แนะนำสำหรับคุณ';
+        } else {
+            headerElement.textContent = 'ร้านอาหารใกล้เคียง';
+        }
+    }
+    
     // Show the restaurant suggestions section
     container.style.display = 'block';
     
-    // Populate restaurant list
+    // Populate restaurant list with deficiency-based recommendations
     listContainer.innerHTML = '';
     
-    // Show top 3 nearest restaurants
     nearbyRestaurants.slice(0, 3).forEach(restaurant => {
         const restaurantItem = document.createElement('div');
         restaurantItem.className = 'restaurant-item';
+        
+        // Determine recommended foods based on deficiencies
+        const recommendedFoods = getRecommendedFoodsForDeficiency(restaurant, deficiencies);
+        
         restaurantItem.innerHTML = `
             <div class="meal-image">${restaurant.emoji}</div>
             <div class="restaurant-info">
@@ -232,8 +496,13 @@ function displayRestaurantSuggestions() {
                     <span> • ${restaurant.cuisine}</span>
                 </div>
                 <p class="restaurant-options">
-                    ${restaurant.healthyOptions.slice(0, 2).join(', ')}
+                    ${recommendedFoods.length > 0 ? recommendedFoods.join(', ') : restaurant.healthyOptions.slice(0, 2).join(', ')}
                 </p>
+                ${deficiencies.length > 0 ? `
+                <p class="restaurant-recommendation-reason" style="font-size: 14px; color: #22986a; font-style: italic; margin-top: 5px;">
+                    💡 ช่วยเติมเต็ม: ${deficiencies.slice(0, 2).join(', ')}
+                </p>
+                ` : ''}
             </div>
             <div class="restaurant-contact">
                 <p class="restaurant-distance">📍 ${restaurant.distance}</p>
@@ -242,7 +511,7 @@ function displayRestaurantSuggestions() {
         `;
         
         restaurantItem.addEventListener('click', () => {
-            showRestaurantDetails(restaurant);
+            showRestaurantDetailsWithNutrition(restaurant, deficiencies);
         });
         
         listContainer.appendChild(restaurantItem);
@@ -250,6 +519,97 @@ function displayRestaurantSuggestions() {
     
     // Scroll to show the suggestions
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function calculateCurrentDeficiencies() {
+    const deficiencies = [];
+    
+    if (currentIntake.protein < dailyTargets.protein * 0.8) {
+        deficiencies.push('โปรตีน');
+    }
+    
+    if (currentIntake.fiber < dailyTargets.fiber * 0.6) {
+        deficiencies.push('ใยอาหาร');
+    }
+    
+    if (currentIntake.calories < dailyTargets.calories * 0.7) {
+        deficiencies.push('แคลอรี่');
+    }
+    
+    if (currentIntake.carbs < dailyTargets.carbs * 0.5) {
+        deficiencies.push('คาร์โบไฮเดรต');
+    }
+    
+    return deficiencies;
+}
+
+function getRecommendedFoodsForDeficiency(restaurant, deficiencies) {
+    const proteinFoods = {
+        "ร้านสวนเขียว": ["โบลอกแซลมอน", "สลัดไก่ย่าง"],
+        "บิสโทร่สดใส": ["แร็ปโปรตีน", "โบลอเมดิเตอร์เรเนียน"],
+        "มุมโภชนาการ": ["สลัดไก่ย่าง", "ปลานึ่ง"],
+        "ไดเนอร์ผู้สูงอายุ": ["ปลาอบกับผัก", "ไข่ต้ม"]
+    };
+    
+    const fiberFoods = {
+        "ร้านสวนเขียว": ["สลัดควินัว", "ซุปผัก"],
+        "บิสโทร่สดใส": ["พาร์เฟต์ผลไม้", "โบลอผัก"],
+        "มุมโภชนาการ": ["ผักนึ่ง", "โอ๊ตมีล"],
+        "ไดเนอร์ผู้สูงอายุ": ["ขนมปังโฮลเกรน", "ผักต้ม"]
+    };
+    
+    const calorieFoods = {
+        "ร้านสวนเขียว": ["โบลอกแซลมอน", "ข้าวไก่ย่าง"],
+        "บิสโทร่สดใส": ["พาสต้าโฮลเกรน", "โบลอเมดิเตอร์เรเนียน"],
+        "มุมโภชนาการ": ["ข้าวกล้องผัดผัก", "ก๋วยเตี๋ยวไก่"],
+        "ไดเนอร์ผู้สูงอายุ": ["ข้าวต้มปลา", "โจ๊กไก่"]
+    };
+    
+    let recommended = [];
+    
+    if (deficiencies.includes('โปรตีน') && proteinFoods[restaurant.name]) {
+        recommended.push(...proteinFoods[restaurant.name]);
+    }
+    
+    if (deficiencies.includes('ใยอาหาร') && fiberFoods[restaurant.name]) {
+        recommended.push(...fiberFoods[restaurant.name]);
+    }
+    
+    if (deficiencies.includes('แคลอรี่') && calorieFoods[restaurant.name]) {
+        recommended.push(...calorieFoods[restaurant.name]);
+    }
+    
+    // Remove duplicates and limit to 2 items
+    return [...new Set(recommended)].slice(0, 2);
+}
+
+function showRestaurantDetailsWithNutrition(restaurant, deficiencies) {
+    const healthyOptionsText = restaurant.healthyOptions.map(option => `• ${option}`).join('\n');
+    const recommendedFoods = getRecommendedFoodsForDeficiency(restaurant, deficiencies);
+    
+    let nutritionRecommendation = '';
+    if (deficiencies.length > 0 && recommendedFoods.length > 0) {
+        nutritionRecommendation = `\n\n🎯 แนะนำสำหรับคุณ:\n${recommendedFoods.map(food => `• ${food}`).join('\n')}\n(ช่วยเติมเต็ม: ${deficiencies.join(', ')})`;
+    }
+    
+    showModal(
+        `${restaurant.emoji} ${restaurant.name}`,
+        `🏪 ร้าน${restaurant.cuisine}\n\n` +
+        `📍 ${restaurant.address}\n` +
+        `📞 ${restaurant.phone}\n` +
+        `⭐ คะแนน ${restaurant.rating}\n` +
+        `📏 ระยะทาง ${restaurant.distance}\n\n` +
+        `🥗 เมนูเพื่อสุขภาพ:\n${healthyOptionsText}${nutritionRecommendation}\n\n` +
+        `ต้องการเส้นทางหรือจองโต๊ะหรือไม่?`,
+        () => {
+            showSuccessMessage(`🗺️ เปิดเส้นทางไป ${restaurant.name}...`);
+        }
+    );
+}
+
+// Legacy function - kept for compatibility
+function displayRestaurantSuggestions() {
+    displayRestaurantSuggestionsBasedOnDeficiency();
 }
 
 function showRestaurantDetails(restaurant) {
@@ -305,20 +665,20 @@ function updateProgressBar() {
 // History screen functions
 function exportReport() {
     showModal(
-        'Export Report',
-        'This would export your weekly nutrition report as a PDF.',
+        'ส่งออกรายงาน',
+        'จะทำการส่งออกรายงานโภชนาการรายสัปดาห์เป็นไฟล์ PDF',
         () => {
-            showSuccessMessage('Weekly report exported successfully!');
+            showSuccessMessage('ส่งออกรายงานรายสัปดาห์เรียบร้อยแล้ว!');
         }
     );
 }
 
 function shareWithFamily() {
     showModal(
-        'Share with Family',
-        'This would share your nutrition progress with family members.',
+        'แชร์กับครอบครัว',
+        'จะทำการแชร์ความคืบหน้าโภชนาการของคุณกับสมาชิกในครอบครัว',
         () => {
-            showSuccessMessage('Progress shared with family!');
+            showSuccessMessage('แชร์ความคืบหน้ากับครอบครัวเรียบร้อยแล้ว!');
         }
     );
 }
@@ -353,7 +713,7 @@ function confirmAction() {
 
 function showSuccessMessage(message) {
     showModal(
-        'Success!',
+        'สำเร็จ!',
         message,
         null
     );
@@ -364,10 +724,176 @@ function showSuccessMessage(message) {
     }, 3000);
 }
 
+// Elder-friendly modal for food details and recommendations
+function showElderFriendlyModal(title, data, type) {
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalText = document.getElementById('modal-text');
+    
+    modalTitle.innerHTML = title;
+    modalTitle.style.fontSize = '28px';
+    modalTitle.style.color = '#22986a';
+    modalTitle.style.marginBottom = '25px';
+    modalTitle.style.textAlign = 'center';
+    
+    let content = '';
+    
+    if (type === 'food-detail') {
+        content = `
+            <div class="elder-food-detail">
+                <div class="food-emoji">${data.emoji}</div>
+                <div class="food-title">${data.name}</div>
+                
+                <div class="detail-section">
+                    <div class="detail-label">🔥 แคลอรี่</div>
+                    <div class="detail-value">${data.calories} แคลอรี่</div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-label">💊 สารอาหาร</div>
+                    <div class="detail-value">${data.nutrients}</div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-label">⏰ เวลาที่เหมาะ</div>
+                    <div class="detail-value">${data.time}</div>
+                </div>
+                
+                <div class="detail-section reason-section">
+                    <div class="detail-label">💡 เหตุผล</div>
+                    <div class="detail-value reason-text">${data.reason}</div>
+                </div>
+            </div>
+        `;
+    } else if (type === 'all-recommendations') {
+        content = `
+            <div class="elder-recommendations">
+                <div class="recommendations-subtitle">คำแนะนำอาหารสำหรับคุณวันนี้</div>
+                ${data.map(food => `
+                    <div class="recommendation-card">
+                        <div class="rec-header">
+                            <span class="rec-emoji">${food.emoji}</span>
+                            <span class="rec-name">${food.name}</span>
+                        </div>
+                        <div class="rec-calories">${food.calories} แคลอรี่</div>
+                        <div class="rec-reason">💡 ${food.reason}</div>
+                        <div class="rec-details">
+                            <div>⏰ ${food.time}</div>
+                            <div>💊 ${food.nutrients}</div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+    
+    modalText.innerHTML = content;
+    modalText.style.textAlign = 'left';
+    modalText.style.lineHeight = '1.8';
+    
+    modal.classList.add('active');
+    currentAction = null;
+}
+
+// Function to display current date
+function displayCurrentDate() {
+    const now = new Date();
+    const day = now.getDate();
+    const year = now.getFullYear();
+    
+    // Thai abbreviated month names
+    const thaiMonths = [
+        'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
+        'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
+    ];
+    
+    const month = thaiMonths[now.getMonth()];
+    
+    const dateElement = document.getElementById('current-date');
+    if (dateElement) {
+        dateElement.textContent = `${day} ${month} ${year}`;
+    }
+}
+
+// Text-to-Speech function for today's summary
+function speakTodaySummary() {
+    // Check if browser supports speech synthesis
+    if (!('speechSynthesis' in window)) {
+        showModal(
+            'ไม่รองรับ',
+            'เบราว์เซอร์ของคุณไม่รองรับการอ่านข้อความ',
+            null
+        );
+        return;
+    }
+
+    const voiceBtn = document.querySelector('.voice-btn');
+    
+    // If already speaking, stop it
+    if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+        voiceBtn.classList.remove('speaking');
+        voiceBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        return;
+    }
+
+    // Create speech text in Thai
+    const summaryText = `วันนี้คุณได้รับแคลอรี่ทั้งหมด ${dailyCalories} แคลอรี่ จากเป้าหมาย ${calorieGoal} แคลอรี่ 
+    โปรตีน ${currentIntake.protein} กรัม 
+    และทานอาหารไปแล้ว ${document.querySelectorAll('#history-screen .meal-item').length} มื้อ 
+    คุณทำได้ดีมากค่ะ ขอให้มีสุขภาพแข็งแรงตลอดไป`;
+
+    const utterance = new SpeechSynthesisUtterance(summaryText);
+    
+    // Set Thai language
+    utterance.lang = 'th-TH';
+    utterance.rate = 0.8; // Slower speech for elder users
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+
+    // Add visual feedback
+    voiceBtn.classList.add('speaking');
+    voiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
+
+    // Event listeners
+    utterance.onstart = function() {
+        console.log('Speech started');
+    };
+
+    utterance.onend = function() {
+        voiceBtn.classList.remove('speaking');
+        voiceBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    };
+
+    utterance.onerror = function(event) {
+        console.error('Speech error:', event.error);
+        voiceBtn.classList.remove('speaking');
+        voiceBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        showModal(
+            'ข้อผิดพลาด',
+            'ไม่สามารถเล่นเสียงได้ กรุณาลองใหม่อีกครั้ง',
+            null
+        );
+    };
+
+    // Try to find Thai voice or use default
+    const voices = speechSynthesis.getVoices();
+    const thaiVoice = voices.find(voice => voice.lang.includes('th')) || voices[0];
+    if (thaiVoice) {
+        utterance.voice = thaiVoice;
+    }
+
+    // Speak the text
+    speechSynthesis.speak(utterance);
+}
+
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
     // Show dashboard screen by default
     showScreen('dashboard');
+    
+    // Display current date
+    displayCurrentDate();
     
     // Initialize progress bar
     updateProgressBar();
@@ -381,8 +907,8 @@ document.addEventListener('DOMContentLoaded', function() {
         item.addEventListener('click', function() {
             const mealName = this.querySelector('h4').textContent;
             showModal(
-                'Meal Details',
-                `${mealName}\n\nThis would show detailed nutrition information for this meal.`,
+                'รายละเอียดอาหาร',
+                `${mealName}\n\nจะแสดงข้อมูลโภชนาการโดยละเอียดของอาหารมื้อนี้`,
                 null
             );
         });
@@ -523,7 +1049,7 @@ function animateValue(element, start, end, duration) {
 
 // Add loading states
 function showLoading(element) {
-    element.innerHTML = '<span class="material-icons">hourglass_empty</span> Loading...';
+    element.innerHTML = '<span class="material-icons">hourglass_empty</span> กำลังโหลด...';
     element.disabled = true;
 }
 
