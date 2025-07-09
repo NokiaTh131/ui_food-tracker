@@ -278,6 +278,193 @@
             </div>
           </div>
         </div>
+
+        <!-- Family Mode Screen -->
+        <div id="family-screen" class="screen">
+          <div class="family-header">
+            <h2>โหมดครอบครัว</h2>
+            <p class="family-subtitle">จัดการโภชนาการให้คนที่คุณรัก</p>
+          </div>
+
+          <!-- Current Active Profile -->
+          <div class="card active-profile-card">
+            <div class="card-header">
+              <span class="card-icon">👤</span>
+              <h3>กำลังดูแลอาหารให้</h3>
+              <button class="switch-profile-btn" onclick="showProfileSwitcher()">
+                <i class="fas fa-exchange-alt"></i>
+              </button>
+            </div>
+            <div id="active-profile-display">
+              <div class="profile-display">
+                <div class="profile-avatar">
+                  <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="profile-info">
+                  <h4 id="active-profile-name">คุณแม่ สมใจ</h4>
+                  <p id="active-profile-details">อายุ 65 ปี • เบาหวาน • ความดันสูง</p>
+                  <p id="active-profile-relation">แม่ของคุณ</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Today's Summary for Family Member -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-icon">📊</span>
+              <h3>สรุปวันนี้</h3>
+              <button class="voice-btn" onclick="speakFamilyMemberSummary()" title="ฟังสรุปวันนี้">
+                <i class="fas fa-volume-up"></i>
+              </button>
+            </div>
+            <div class="family-summary">
+              <div class="summary-grid">
+                <div class="summary-item">
+                  <div class="summary-icon">🍽️</div>
+                  <div class="summary-data">
+                    <span class="summary-number">3</span>
+                    <span class="summary-label">มื้อวันนี้</span>
+                  </div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-icon">💊</div>
+                  <div class="summary-data">
+                    <span class="summary-number">ครบ</span>
+                    <span class="summary-label">ยา/วิตามิน</span>
+                  </div>
+                </div>
+                <div class="summary-item health-alert">
+                  <div class="summary-icon">⚠️</div>
+                  <div class="summary-data">
+                    <span class="summary-number">สูง</span>
+                    <span class="summary-label">โซเดียม</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-icon">⚡</span>
+              <h3>การดำเนินการด่วน</h3>
+            </div>
+            <div class="quick-actions">
+              <button class="action-btn primary" onclick="orderFoodForFamily()">
+                <div class="action-icon">🛒</div>
+                <div class="action-text">
+                  <span class="action-title">สั่งอาหารให้</span>
+                  <span class="action-subtitle">ตามคำแนะนำโภชนาการ</span>
+                </div>
+              </button>
+              <button class="action-btn secondary" onclick="addMealForFamily()">
+                <div class="action-icon">📷</div>
+                <div class="action-text">
+                  <span class="action-title">บันทึกมื้ออาหาร</span>
+                  <span class="action-subtitle">ถ่ายรูปอาหารที่ทาน</span>
+                </div>
+              </button>
+              <button class="action-btn secondary" onclick="showHealthReminders()">
+                <div class="action-icon">⏰</div>
+                <div class="action-text">
+                  <span class="action-title">แจ้งเตือนยา</span>
+                  <span class="action-subtitle">ตารางยาและวิตามิน</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Family Members List -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-icon">👨‍👩‍👧‍👦</span>
+              <h3>สมาชิกครอบครัว</h3>
+              <button class="add-member-btn" onclick="showAddMemberModal()">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+            <div id="family-members-list">
+              <div class="family-member-item active" onclick="switchToProfile('mom')">
+                <div class="member-avatar">
+                  <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="member-info">
+                  <h4>คุณแม่ สมใจ</h4>
+                  <p>อายุ 65 ปี • เบาหวาน</p>
+                  <div class="member-status">
+                    <span class="status-dot active"></span>
+                    <span>กำลังติดตาม</span>
+                  </div>
+                </div>
+                <div class="member-actions">
+                  <span class="member-role">แม่</span>
+                </div>
+              </div>
+              
+              <div class="family-member-item" onclick="switchToProfile('dad')">
+                <div class="member-avatar">
+                  <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="member-info">
+                  <h4>คุณพ่อ สมชาย</h4>
+                  <p>อายุ 68 ปี • ความดันสูง</p>
+                  <div class="member-status">
+                    <span class="status-dot"></span>
+                    <span>ไม่ได้ติดตาม</span>
+                  </div>
+                </div>
+                <div class="member-actions">
+                  <span class="member-role">พ่อ</span>
+                </div>
+              </div>
+
+              <div class="family-member-item" onclick="switchToProfile('grandma')">
+                <div class="member-avatar">
+                  <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="member-info">
+                  <h4>คุณยาย ปราณี</h4>
+                  <p>อายุ 82 ปี • หัวใจ • เบาหวาน</p>
+                  <div class="member-status">
+                    <span class="status-dot"></span>
+                    <span>ไม่ได้ติดตาม</span>
+                  </div>
+                </div>
+                <div class="member-actions">
+                  <span class="member-role">ยาย</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Health Alerts -->
+          <div class="card health-alerts-card">
+            <div class="card-header">
+              <span class="card-icon">🚨</span>
+              <h3>การแจ้งเตือนสุขภาพ</h3>
+            </div>
+            <div class="health-alerts">
+              <div class="alert-item warning">
+                <div class="alert-icon">⚠️</div>
+                <div class="alert-content">
+                  <h4>โซเดียมสูงเกินไป</h4>
+                  <p>วันนี้ได้รับโซเดียม 2,800mg (เกินค่าแนะนำ 600mg)</p>
+                  <span class="alert-time">30 นาทีที่ผ่านมา</span>
+                </div>
+              </div>
+              <div class="alert-item info">
+                <div class="alert-icon">💊</div>
+                <div class="alert-content">
+                  <h4>เวลาทานยา</h4>
+                  <p>ยาเบาหวาน (เมตฟอร์มิน) - 19:00 น.</p>
+                  <span class="alert-time">อีก 2 ชั่วโมง</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
 
       <!-- Bottom Navigation -->
@@ -293,6 +480,10 @@
         <button class="nav-btn" onclick="showScreen('history')">
           <span class="nav-icon"><i class="fas fa-clock-rotate-left"></i></span>
           <span>ประวัติ</span>
+        </button>
+        <button class="nav-btn" onclick="showScreen('family')">
+          <span class="nav-icon"><i class="fas fa-users"></i></span>
+          <span>ครอบครัว</span>
         </button>
       </nav>
     </div>

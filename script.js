@@ -702,21 +702,41 @@ function findMoreRestaurants() {
 }
 
 function updateProgressBar() {
-    const progressPercentage = Math.min((dailyCalories / calorieGoal) * 100, 100);
-    const progressFill = document.querySelector('.progress-fill');
-    const progressText = document.querySelector('.progress-text');
-    const caloriesNumber = document.querySelector('.stat-number');
-    
-    if (progressFill) {
-        progressFill.style.width = progressPercentage + '%';
-    }
-    
-    if (progressText) {
-        progressText.textContent = Math.round(progressPercentage) + '% of daily goal';
-    }
-    
-    if (caloriesNumber) {
-        caloriesNumber.textContent = dailyCalories.toLocaleString();
+    try {
+        const progressPercentage = Math.min((dailyCalories / calorieGoal) * 100, 100);
+        const progressFill = document.querySelector('.progress-fill');
+        const progressText = document.querySelector('.progress-text');
+        const caloriesNumber = document.querySelector('.stat-number');
+        
+        if (progressFill) {
+            progressFill.style.width = progressPercentage + '%';
+        }
+        
+        if (progressText) {
+            progressText.textContent = Math.round(progressPercentage) + '% of daily goal';
+        }
+        
+        if (caloriesNumber) {
+            caloriesNumber.textContent = dailyCalories.toLocaleString();
+        }
+        
+        // Update ring progress if exists
+        const ringProgress = document.querySelector('.ring-progress');
+        if (ringProgress) {
+            const circumference = 377; // 2πr
+            const remaining = calorieGoal - dailyCalories;
+            const offset = circumference * (1 - remaining / calorieGoal);
+            ringProgress.style.strokeDashoffset = offset;
+        }
+        
+        // Update ring numbers if exists
+        const ringNumber = document.querySelector('.ring-label-number');
+        if (ringNumber) {
+            ringNumber.textContent = Math.max(0, calorieGoal - dailyCalories).toLocaleString();
+        }
+        
+    } catch (error) {
+        console.error('Error updating progress bar:', error);
     }
 }
 
@@ -875,6 +895,323 @@ function displayCurrentDate() {
     }
 }
 
+// Family Mode Data
+const familyMembers = {
+    mom: {
+        id: 'mom',
+        name: 'คุณแม่ สมใจ',
+        age: 65,
+        conditions: ['เบาหวาน', 'ความดันสูง'],
+        relation: 'แม่ของคุณ',
+        dailyTargets: {
+            calories: 1500,
+            protein: 75,
+            carbs: 180,
+            fat: 50,
+            fiber: 25,
+            sodium: 1500 // Lower for health conditions
+        },
+        currentIntake: {
+            calories: 980,
+            protein: 42,
+            carbs: 120,
+            fat: 28,
+            fiber: 15,
+            sodium: 2800 // High alert!
+        },
+        medications: [
+            { name: 'เมตฟอร์มิน', time: '19:00', type: 'เบาหวาน' },
+            { name: 'ลิซิโนปริล', time: '08:00', type: 'ความดัน' }
+        ]
+    },
+    dad: {
+        id: 'dad',
+        name: 'คุณพ่อ สมชาย',
+        age: 68,
+        conditions: ['ความดันสูง'],
+        relation: 'พ่อของคุณ',
+        dailyTargets: {
+            calories: 1800,
+            protein: 90,
+            carbs: 225,
+            fat: 60,
+            fiber: 25,
+            sodium: 1800
+        },
+        currentIntake: {
+            calories: 1200,
+            protein: 55,
+            carbs: 150,
+            fat: 35,
+            fiber: 18,
+            sodium: 1200
+        }
+    },
+    grandma: {
+        id: 'grandma',
+        name: 'คุณยาย ปราณี',
+        age: 82,
+        conditions: ['หัวใจ', 'เบาหวาน'],
+        relation: 'ยายของคุณ',
+        dailyTargets: {
+            calories: 1300,
+            protein: 65,
+            carbs: 160,
+            fat: 43,
+            fiber: 20,
+            sodium: 1200
+        },
+        currentIntake: {
+            calories: 800,
+            protein: 30,
+            carbs: 100,
+            fat: 20,
+            fiber: 10,
+            sodium: 800
+        }
+    }
+};
+
+let currentFamilyMember = 'mom';
+
+// Family Mode Functions
+function switchToProfile(memberId) {
+    if (!familyMembers[memberId]) {
+        console.error('Family member not found:', memberId);
+        return;
+    }
+    
+    // Update current family member
+    currentFamilyMember = memberId;
+    const member = familyMembers[memberId];
+    
+    // Update active profile display with error checking
+    const nameElement = document.getElementById('active-profile-name');
+    const detailsElement = document.getElementById('active-profile-details');
+    const relationElement = document.getElementById('active-profile-relation');
+    
+    if (nameElement) nameElement.textContent = member.name;
+    if (detailsElement) detailsElement.textContent = 
+        `อายุ ${member.age} ปี • ${member.conditions.join(' • ')}`;
+    if (relationElement) relationElement.textContent = member.relation;
+    
+    // Update visual state - only if we're on family screen
+    if (currentScreen === 'family') {
+        document.querySelectorAll('.family-member-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        const selectedItem = document.querySelector(`[onclick="switchToProfile('${memberId}')"]`);
+        if (selectedItem) {
+            selectedItem.classList.add('active');
+        }
+    }
+    
+    // Update dashboard data to reflect this family member
+    updateDashboardForFamilyMember(member);
+    
+    console.log(`Successfully switched to ${member.name}`);
+}
+
+function updateDashboardForFamilyMember(member) {
+    try {
+        if (!member) {
+            console.error('No member data provided');
+            return;
+        }
+        
+        console.log('Updating dashboard for:', member.name);
+        
+        // Update global variables to reflect family member's data
+        dailyCalories = member.currentIntake.calories;
+        calorieGoal = member.dailyTargets.calories;
+        currentIntake = { ...member.currentIntake };
+        dailyTargets = { ...member.dailyTargets };
+        
+        console.log('Updated global variables:', {
+            dailyCalories,
+            calorieGoal,
+            currentIntake,
+            dailyTargets
+        });
+        
+        // Update progress bar
+        updateProgressBar();
+        
+    } catch (error) {
+        console.error('Error updating dashboard for family member:', error);
+    }
+}
+
+function speakFamilyMemberSummary() {
+    const member = familyMembers[currentFamilyMember];
+    if (!member) return;
+    
+    // Check if browser supports speech synthesis
+    if (!('speechSynthesis' in window)) {
+        showModal(
+            'ไม่รองรับ',
+            'เบราว์เซอร์ของคุณไม่รองรับการอ่านข้อความ',
+            null
+        );
+        return;
+    }
+
+    const voiceBtn = document.querySelector('.voice-btn');
+    
+    // If already speaking, stop it
+    if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+        voiceBtn.classList.remove('speaking');
+        voiceBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        return;
+    }
+
+    // Create speech text for family member
+    const summaryText = `สรุปสุขภาพของ ${member.name} วันนี้
+    
+    ได้รับแคลอรี่ทั้งหมด ${member.currentIntake.calories} แคลอรี่ จากเป้าหมาย ${member.dailyTargets.calories} แคลอรี่
+    
+    โปรตีน ${member.currentIntake.protein} กรัม
+    
+    ทานอาหารไปแล้ว 3 มื้อ
+    
+    ${member.currentIntake.sodium > member.dailyTargets.sodium ? 'โซเดียมสูงเกินไป ควรระวัง' : 'โซเดียมอยู่ในเกณฑ์ปกติ'}
+    
+    ${member.conditions.length > 0 ? `ต้องระวังเรื่อง ${member.conditions.join(' และ ')}` : ''}
+    
+    ขอให้มีสุขภาพแข็งแรงตลอดไป`;
+
+    const utterance = new SpeechSynthesisUtterance(summaryText);
+    
+    // Set Thai language and elder-friendly settings
+    utterance.lang = 'th-TH';
+    utterance.rate = 0.7; // Even slower for family mode
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+
+    // Add visual feedback
+    voiceBtn.classList.add('speaking');
+    voiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
+
+    // Event listeners
+    utterance.onend = function() {
+        voiceBtn.classList.remove('speaking');
+        voiceBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    };
+
+    utterance.onerror = function(event) {
+        console.error('Speech error:', event.error);
+        voiceBtn.classList.remove('speaking');
+        voiceBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    };
+
+    // Speak the text
+    speechSynthesis.speak(utterance);
+}
+
+function orderFoodForFamily() {
+    const member = familyMembers[currentFamilyMember];
+    if (!member) return;
+    
+    // Calculate what nutrients the family member needs
+    const deficiencies = [];
+    const remaining = {
+        calories: member.dailyTargets.calories - member.currentIntake.calories,
+        protein: member.dailyTargets.protein - member.currentIntake.protein,
+        fiber: member.dailyTargets.fiber - member.currentIntake.fiber
+    };
+    
+    if (remaining.calories > 200) deficiencies.push(`แคลอรี่ ${remaining.calories} แคลอรี่`);
+    if (remaining.protein > 10) deficiencies.push(`โปรตีน ${remaining.protein}g`);
+    if (remaining.fiber > 5) deficiencies.push(`ใยอาหาร ${remaining.fiber}g`);
+    
+    const recommendedRestaurants = nearbyRestaurants.filter(r => 
+        r.healthyOptions.some(option => 
+            option.includes('โบลอก') || option.includes('สลัด') || option.includes('ผัก')
+        )
+    );
+    
+    showModal(
+        `🛒 สั่งอาหารให้ ${member.name}`,
+        `จะสั่งอาหารที่เหมาะสมสำหรับ ${member.name}\n\n` +
+        `🍽️ ต้องการเพิ่ม:\n${deficiencies.map(d => `   • ${d}`).join('\n')}\n\n` +
+        `🏪 ร้านที่แนะนำ:\n${recommendedRestaurants.slice(0,2).map(r => `   • ${r.name}`).join('\n')}\n\n` +
+        `❓ ต้องการดำเนินการต่อหรือไม่?`,
+        () => {
+            showSuccessMessage(`✅ สั่งอาหารสำเร็จ!\n\nได้ส่งคำสั่งซื้ออาหารเพื่อสุขภาพให้ ${member.name} แล้ว\n\n📱 จะมี SMS แจ้งเมื่อจัดส่ง\n🚗 คาดว่าจะถึง 30-45 นาที`);
+        }
+    );
+}
+
+function addMealForFamily() {
+    const member = familyMembers[currentFamilyMember];
+    if (!member) return;
+    
+    showModal(
+        `📷 บันทึกมื้ออาหารให้ ${member.name}`,
+        `จะเปิดกล้องเพื่อถ่ายรูปอาหารที่ ${member.name} ทาน\n\n` +
+        `🏥 การวิเคราะห์จะใช้ข้อมูลสุขภาพของ ${member.name}\n` +
+        `   • ${member.conditions.join('\n   • ')}\n\n` +
+        `📊 ผลลัพธ์จะแสดงคำแนะนำที่เหมาะสมสำหรับโรคประจำตัว`,
+        () => {
+            // Switch to photo screen and trigger photo upload
+            showScreen('photo');
+            setTimeout(() => {
+                triggerPhotoUpload();
+            }, 500);
+        }
+    );
+}
+
+function showHealthReminders() {
+    const member = familyMembers[currentFamilyMember];
+    if (!member || !member.medications) {
+        showModal(
+            '💊 แจ้งเตือนยา',
+            `ไม่มีข้อมูลยาสำหรับ${member ? member.name : 'สมาชิกที่เลือก'}`,
+            null
+        );
+        return;
+    }
+    
+    const medicationList = member.medications.map(med => 
+        `💊 ${med.name}\n   ⏰ ${med.time} น.\n   🏥 สำหรับ${med.type}`
+    ).join('\n\n');
+    
+    showModal(
+        `💊 ตารางยาของ ${member.name}`,
+        `📋 รายการยาที่ต้องทานประจำวัน:\n\n${medicationList}\n\n⚠️ คำเตือน:\n   • กรุณาทานยาตรงเวลา\n   • ไม่ข้ามมื้อ\n   • ทานหลังอาหาร`,
+        null
+    );
+}
+
+function showProfileSwitcher() {
+    const membersList = Object.values(familyMembers).map(member => 
+        `${member.name} (${member.relation})`
+    ).join('\n');
+    
+    showModal(
+        '👥 เปลี่ยนโปรไฟล์',
+        `👨‍👩‍👧‍👦 เลือกสมาชิกครอบครัวที่ต้องการดูแล:\n\n${membersList.map(m => `   • ${m}`).join('\n')}\n\n📱 คลิกที่รายชื่อด้านล่างเพื่อเปลี่ยน`,
+        null
+    );
+}
+
+function showAddMemberModal() {
+    showModal(
+        '➕ เพิ่มสมาชิกครอบครัว',
+        '🚧 ฟีเจอร์นี้จะมาเร็วๆ นี้!\n\n' +
+        '✨ ความสามารถที่จะมี:\n' +
+        '   • เพิ่มสมาชิกครอบครัวใหม่\n' +
+        '   • กำหนดข้อมูลสุขภาพเฉพาะบุคคล\n' +
+        '   • ตั้งค่าความต้องการโภชนาการ\n' +
+        '   • เพิ่มข้อมูลโรคประจำตัว\n\n' +
+        '📧 ติดตามข่าวสารเพิ่มเติมทาง email',
+        null
+    );
+}
+
 // Text-to-Speech function for today's summary
 function speakTodaySummary() {
     // Check if browser supports speech synthesis
@@ -960,6 +1297,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Populate food recommendations on dashboard
     populateFoodRecommendations();
+    
+    // Initialize family mode if on family screen
+    if (currentScreen === 'family') {
+        const defaultMember = familyMembers[currentFamilyMember];
+        if (defaultMember) {
+            updateDashboardForFamilyMember(defaultMember);
+        }
+    }
     
     // Add click handlers for meal items
     const mealItems = document.querySelectorAll('.meal-item');
@@ -1127,11 +1472,14 @@ function hideLoading(element, originalText) {
 // Add error handling
 window.addEventListener('error', function(e) {
     console.error('Application error:', e.error);
-    showModal(
-        'Error',
-        'Something went wrong. Please try again.',
-        null
-    );
+    // Don't show modal for every error to avoid interference
+    if (e.error && e.error.message && !e.error.message.includes('Family')) {
+        showModal(
+            'Error',
+            'Something went wrong. Please try again.',
+            null
+        );
+    }
 });
 
 // Add performance monitoring

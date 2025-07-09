@@ -904,11 +904,13 @@ body {
 }
 
 .modal-content p {
-    font-size: 20px;
+    font-size: 18px;
     color: #555555;
     margin-bottom: 25px;
-    text-align: center;
-    line-height: 1.5;
+    text-align: left;
+    line-height: 1.8;
+    white-space: pre-line;
+    padding: 0 5px;
 }
 
 .modal-buttons {
@@ -1155,6 +1157,352 @@ body {
     padding: 15px 20px;
     border-radius: 12px;
     width: 100%;
+}
+
+/* Family Mode Styles */
+.family-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.family-header h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #22986a;
+    margin-bottom: 8px;
+}
+
+.family-subtitle {
+    font-size: 16px;
+    color: #666;
+    font-weight: 400;
+}
+
+.active-profile-card {
+    background: linear-gradient(135deg, #22986a 0%, #2ba572 100%);
+    color: white;
+    border: none;
+}
+
+.active-profile-card .card-header h3 {
+    color: white;
+}
+
+.switch-profile-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.switch-profile-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.05);
+}
+
+.profile-display {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profile-avatar {
+    font-size: 48px;
+    color: white;
+}
+
+.profile-info h4 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.profile-info p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.9);
+    margin: 3px 0;
+}
+
+.family-summary {
+    padding: 10px 0;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 15px;
+    background: #f8f9fa;
+    border-radius: 15px;
+    transition: all 0.2s ease;
+}
+
+.summary-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.summary-item.health-alert {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+}
+
+.summary-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.summary-number {
+    font-size: 20px;
+    font-weight: 600;
+    color: #22986a;
+    display: block;
+}
+
+.summary-label {
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+}
+
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+}
+
+.action-btn.primary {
+    background: #22986a;
+    color: white;
+    box-shadow: 0 4px 12px rgba(34, 152, 106, 0.3);
+}
+
+.action-btn.primary:hover {
+    background: #1e8660;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(34, 152, 106, 0.4);
+}
+
+.action-btn.secondary {
+    background: #f8f9fa;
+    color: #2E2E2E;
+    border: 2px solid #e9ecef;
+}
+
+.action-btn.secondary:hover {
+    background: #e9ecef;
+    border-color: #22986a;
+    transform: translateY(-1px);
+}
+
+.action-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+}
+
+.action-text {
+    flex: 1;
+}
+
+.action-title {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.action-subtitle {
+    display: block;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.add-member-btn {
+    background: #22986a;
+    border: none;
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-member-btn:hover {
+    background: #1e8660;
+    transform: scale(1.1);
+}
+
+.family-member-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.family-member-item:hover {
+    background: #f8f9fa;
+    transform: translateX(5px);
+}
+
+.family-member-item.active {
+    background: #e8f5e8;
+    border-color: #22986a;
+}
+
+.member-avatar {
+    font-size: 40px;
+    color: #22986a;
+    flex-shrink: 0;
+}
+
+.member-info {
+    flex: 1;
+}
+
+.member-info h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2E2E2E;
+    margin-bottom: 3px;
+}
+
+.member-info p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.member-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #666;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ddd;
+}
+
+.status-dot.active {
+    background: #22986a;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.member-actions {
+    text-align: right;
+}
+
+.member-role {
+    background: #22986a;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.health-alerts {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.alert-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    border-radius: 12px;
+    border-left: 4px solid #ddd;
+}
+
+.alert-item.warning {
+    background: #fff3cd;
+    border-left-color: #ffc107;
+}
+
+.alert-item.info {
+    background: #cff4fc;
+    border-left-color: #0dcaf0;
+}
+
+.alert-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.alert-content h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2E2E2E;
+    margin-bottom: 5px;
+}
+
+.alert-content p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.alert-time {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Bottom Navigation Update */
+.bottom-nav {
+    padding: 12px 0 20px;
+}
+
+.nav-btn {
+    min-width: 70px;
+    padding: 10px 12px;
+    font-size: 12px;
 }
 
 /* Mobile Touch Improvements */
